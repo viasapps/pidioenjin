@@ -1,0 +1,52 @@
+{
+	"name": "laravel/laravel",
+	"description": "The Laravel Framework.",
+	"keywords": ["framework", "laravel"],
+	"require": {
+		"laravel/framework": "4.0.*",
+		"way/generators": "dev-master",
+		"way/laravel-test-helpers": "dev-master",
+		"buchin/youtube": "dev-master",
+		"cviebrock/eloquent-sluggable": "1.0.*",
+		"laravelbook/ardent": "dev-master",
+		"teepluss/theme": "dev-master",
+		"roumen/sitemap": "dev-master",
+		"zizaco/confide": "dev-master",
+		"buchin/madmimi": "dev-master",
+		"hisorange/browser-detect": "1.*"
+	},
+	"require-dev": {
+		"mockery/mockery": "*"
+	},
+	"autoload": {
+		"classmap": [
+			"app/commands",
+			"app/controllers",
+			"app/models",
+			"app/database/migrations",
+			"app/database/seeds",
+			"app/tests/TestCase.php"
+		],
+		"files": [
+			"vendor/buchin/stupidpie/stupidpie.php"
+		]
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"php artisan optimize"
+		],
+		"pre-update-cmd": [
+			"php artisan clear-compiled"
+		],
+		"post-update-cmd": [
+			"php artisan optimize"
+		],
+		"post-create-project-cmd": [
+			"php artisan key:generate"
+		]
+	},
+	"config": {
+		"preferred-install": "dist"
+	},
+	"minimum-stability": "dev"
+}
