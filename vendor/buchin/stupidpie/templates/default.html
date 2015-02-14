@@ -1,0 +1,21 @@
+{% api %}
+
+<article class="post-1 post type-post status-publish format-standard hentry category-uncategorized" >
+	<div class="post-format-single standard"></div>
+
+	<div class="entry-wrap">
+		<header class="entry-header">
+			<a href="#" class="post-date"></a>
+			<h1 class="entry-title">{{ term | ucwords }}</h1>
+		</header><!--end .entry-header -->
+		
+		<div class="entry-content">
+			{% for index, item in api %}{% if index == 3 %}<p>{% endif %}{% if index == 6 %}<p>{% endif %}{% if index == 9 %}<p>{% endif %}
+			{{item.title  | remove '...' | trim | strtolower | ucfirst }}, {{item.description | remove '...' | trim | strtolower | ucfirst }}.
+			{% if index == 3 %}</p>{% endif %}{% if index == 6 %}</p>{% endif %}{% if index == 9 %}</p>{% endif %}
+			{% endfor %}
+	  	</div><!-- end .entry-content -->
+
+	</div><!--end .entry-wrap-->
+	
+</article>
