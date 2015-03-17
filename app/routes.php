@@ -41,3 +41,16 @@ Route::post('user/forgot_password',        'UserController@do_forgot_password');
 Route::get( 'user/reset_password/{token}', 'UserController@reset_password');
 Route::post('user/reset_password',         'UserController@do_reset_password');
 Route::get( 'user/logout',                 'UserController@logout');
+
+// about page (app/views/about.blade.php)
+Route::get('about', 'HomeController@about');
+Route::get('privacy', 'HomeController@privacy');
+Route::get('terms', 'HomeController@terms');
+Route::get('copyright', 'HomeController@copyright');
+
+App::missing(function($exception)
+	{
+		// shows an error page (app/views/error.blade.php)
+		// returns a page not found error
+		return Response::view('error', array(), 404);
+	});

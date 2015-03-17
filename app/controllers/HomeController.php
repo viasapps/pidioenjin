@@ -169,19 +169,110 @@ class HomeController extends BaseController {
         }
         
 	}
+	
 
 	public function download($id, $slug, $format)
 	{
+		include_once('curl.php');
+		 $config['ThumbnailImageMode']=2; // show thumbnail image by proxy from this server
+#$config['VideoLinkMode']='direct'; // show only direct download link #$config['VideoLinkMode']='proxy'; // show only by proxy download link 
+		$config['VideoLinkMode']='both'; // show both direct and by proxy download links
+
+		$config['feature']['browserExtensions']=true; // show links for install browser extensions? true or false
+
 		
 		$video = Video::findOrFail($id);
-		$url = 'http://keepvid.com/?url='.urlencode('http://www.youtube.com/watch?v=' . $video->youtubeid);
+		//$url = 'http://keepvid.com/?url='.urlencode('http://www.youtube.com/watch?v=' . $video->youtubeid);
+		$url = "http://cdn1-daulahislamiysh.rhcloud.com/getvideo.php?videoid=".$video->youtubeid."&type=download";
+	
+/* First get the video info page for this video id */
+//$my_video_info = 'http://www.youtube.com/get_video_info?&video_id='. $my_id;
+$getformat = $format;
+if($getformat == "android"){
 
-        $osFamily = BrowserDetect::osFamily();
+$osFamily = BrowserDetect::osFamily();
         
 		if($osFamily == 'AndroidOS' && Config::get('videoengine.ve_android.redirect_download_to_apk')){
 			$url = Config::get('videoengine.ve_android.apk_url');
 		}
+}
+$my_video_info = 'http://www.youtube.com/get_video_info?&video_id='. $video->youtubeid.'&asv=3&el=detailpage&hl=en_US'; //video details fix *1
+$my_video_info = curlGet($my_video_info);
 
+/* TODO: Check return from curl for status code */
+
+$thumbnail_url = $title = $url_encoded_fmt_stream_map = $type = $url = '';
+
+parse_str($my_video_info);
+
+$my_title = $title;
+$cleanedtitle = str_replace(' ', '-', $title ); 
+$cleanedtitle = preg_replace('/[^A-Za-z0-9\-]/', '', $cleanedtitle );
+
+if(isset($url_encoded_fmt_stream_map)) {
+	/* Now get the url_encoded_fmt_stream_map, and explode on comma */
+	$my_formats_array = explode(',',$url_encoded_fmt_stream_map);
+	/*if($debug) {
+		echo '<pre>';
+		print_r($my_formats_array);
+		echo '</pre>';
+	}*/
+} else {
+	echo '<p>No encoded format stream found.</p>';
+	echo '<p>Here is what we got from YouTube:</p>';
+	echo $my_video_info;
+}
+if (count($my_formats_array) == 0) {
+	echo '<p>No format stream map found - was the video id correct?</p>';
+	//exit;
+}
+
+/* create an array of available download formats */
+$avail_formats[] = '';
+$i = 0;
+$ipbits = $ip = $itag = $sig = $quality = '';
+$expire = time(); 
+
+foreach($my_formats_array as $format) {
+	parse_str($format);
+	$avail_formats[$i]['itag'] = $itag;
+	$avail_formats[$i]['quality'] = $quality;
+	$type = explode(';',$type);
+	$avail_formats[$i]['type'] = $type[0];
+	$avail_formats[$i]['url'] = urldecode($url) . '&signature=' . $sig;
+	parse_str(urldecode($url));
+	$avail_formats[$i]['expires'] = date("G:i:s T", $expire);
+	$avail_formats[$i]['ipbits'] = $ipbits;
+	$avail_formats[$i]['ip'] = $ip;
+	$i++;
+}
+
+	/* now that we have the array, print the options */
+	for ($i = 0; $i < count($avail_formats); $i++) {
+		/*echo '<li>';
+		echo '<span class="itag"></span> ';
+		if($config['VideoLinkMode']=='direct'||$config['VideoLinkMode']=='both')
+		  echo '<a href="' . $avail_formats[$i]['url'] . '&title='.$cleanedtitle.'" class="mime">' . $avail_formats[$i]['type'] . '</a> ';
+		else
+		  echo '<span class="mime">' . $avail_formats[$i]['type'] . '</span> ';
+		echo '<small>(' .  $avail_formats[$i]['quality'];
+		if($config['VideoLinkMode']=='proxy'||$config['VideoLinkMode']=='both')
+			echo ' / ' . '<a href="http://cdn1-daulahislamiysh.rhcloud.com/download.php?mime=' . $avail_formats[$i]['type'] .'&title='. urlencode($my_title) .'&token='.base64_encode($avail_formats[$i]['url']) . '" class="dl">download</a>';
+		echo ')</small> '.
+			'<small><span class="size"> ' . get_size($avail_formats[$i]['url']) . '</.span></small>'.
+		'</li><br>';*/
+		if ( $avail_formats[$i]['quality'] == $getformat ){
+				 //echo '<br>Hasil :  ' .$avail_formats[$i]['quality'] .' ('. formatBytes(get_size($avail_formats[$i]['url'])).') <a href="http://cdn1-daulahislamiyah.rhcloud.com/download.php?mime=' . $avail_formats[$i]['type'] .'&title='. urlencode($my_title) .'&token='.base64_encode($avail_formats[$i]['url']) . '" class="dl">Download from this site</a>';
+				 //echo ' | <a href="' . $avail_formats[$i]['url'] . '&title='.$cleanedtitle.'" class="mime"> Direct Download</a> ';
+				 $url = 'http://cdn1-daulahislamiyah.rhcloud.com/download.php?mime=' . $avail_formats[$i]['type'] .'&title='. urlencode($my_title) .'&token='.base64_encode($avail_formats[$i]['url']); //$avail_formats[$i]['url'].'&title='.$cleanedtitle ;
+		//}else{
+				//echo "<br>Tidak sama, quality= ". $avail_formats[$i]['quality']."<br>format= " .$getformat ;
+		}
+	}
+	
+
+				//echo "<br>return : <br>";
+		 
 		return Redirect::to($url);
         
 	}
@@ -212,5 +303,46 @@ class HomeController extends BaseController {
         
         
     }
+
+
+	public function about()
+	{
+		$this->theme->layout('about');
+		$this->theme->setTitle('About | ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_desc('About ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_keywords('About ' . Config::get('videoengine.name'));
+
+		return $this->theme->scope('home.index')->render();
+	}
+			
+	public function privacy()
+	{
+		$this->theme->layout('privacy');
+		$this->theme->setTitle('Privacy Policy | ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_desc('Privacy Policy ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_keywords('Privacy Policy ' . Config::get('videoengine.name'));
+
+		return $this->theme->scope('home.index')->render();
+	}
+	
+	public function terms()
+	{
+		$this->theme->layout('terms');
+		$this->theme->setTitle('Terms of Use | ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_desc('Terms of Use ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_keywords('Terms of Use ' . Config::get('videoengine.name'));
+
+		return $this->theme->scope('home.index')->render();
+	}
+	
+	public function copyright()
+	{
+		$this->theme->layout('copyright');
+		$this->theme->setTitle('Copyright | ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_desc('Copyright ' . Config::get('videoengine.name'));
+		$this->theme->setMeta_keywords('Copyright ' . Config::get('videoengine.name'));
+
+		return $this->theme->scope('home.index')->render();
+	}
 
 }

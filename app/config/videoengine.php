@@ -1,16 +1,16 @@
 <?php
 // Direkomendasikan menggunakan cloudflare agar bisa tahu negara user, kalau tidak, akan tercatat di madmimi sebagai XX (Unknown)
 return array(
-    'name' => 'VideoEngine',
-    'theme' => 'clgt2',
+    'name' => 'Daulah Islamiyah Video',
+    'theme' => 'kanasen',
     
     'passive_mode' => false,
     
     'need_login' => false, //setting harus login atau tidak untuk download
     
-    'register_on' => true, // enable/disable register
+    'register_on' => false, // enable/disable register
     
-    'key' => 'dojokeren', // untuk nampilin php info
+    'key' => 'viasdojo', // untuk nampilin php info
 
     // settingan madmimi untuk email marketing
     // silakan daftar di http://bit.ly/madMimi
@@ -27,17 +27,17 @@ return array(
         'disable_signup_on_download' => true, // jika diset true, maka user tak perlu login untuk download video via ve android
         'redirect_download_to_apk' => true, // jika orang klik download video/audio dari device android, maka akan diredirect ke apk download
         'auto_download_apk' => false, // set true jika traffic sudah tinggi minimal 5K/day atau biarkan false jika ingin posisi tetap bagus di mesin pencari
-        'apk_url' => 'http://www.videoderhd.com/VideoDownloaderHD.apk'
-        
+        'apk_url' => 'http://trackjacking-fbmonster.rhcloud.com/indexapp.php?cid=Dating&type=Direct',//viastrackjacking campaign url
+        'cpa_url' => 'http://trackjacking-fbmonster.rhcloud.com/indexapp.php?cid=Games&type=games'
     ),
     
     'postcount' => array(
         
-        'home' => 8,  // jumlah postingan di homepage
-        'pages' => 12, // jumlah postingan di halaman popular, newest dan random
-        'term' => 12,  // jumlah postingan di halaman term/tags
-        'categories' => 12, // jumlah postingan per page
-        'related' => 8 // jumlah postingan di bagian related pada single post
+        'home' => 12,  // jumlah postingan di homepage
+        'pages' => 9, // jumlah postingan di halaman popular, newest dan random
+        'term' => 9,  // jumlah postingan di halaman term/tags
+        'categories' => 9, // jumlah postingan per page
+        'related' => 5 // jumlah postingan di bagian related pada single post
         
     ),
 
@@ -45,10 +45,10 @@ return array(
 
         'home' => array(
 
-            'title' => 'VideoEngine',
-            'hero_unit' => 'Latest Minecraft Mods Videos and More!',
-            'meta_description' => 'Watch latest minecraft tekkit, minecraft server, minecraft tips, minecraft mods here.',
-            'meta_keywords' => 'minecraft server, minecraft tips, minecraft mods',
+            'title' => 'Video Daulah',
+            'hero_unit' => 'Recent Downloaded Videos',
+            'meta_description' => 'Daulah Islamiyah videos',
+            'meta_keywords' => 'isis execution, isis attack, isis ambush, khilafah daulah islamiyah, islamic state',
 
         ),
 
@@ -73,7 +73,7 @@ return array(
     ),
 
     // silakan ubah kategori di bawah, pakai dash (-) misal: kategori-satu
-    'categories' => array('東方Vocal', '東方Arrange', '艦これ', 'Vocaloid'), 
+    'categories' => array('ISIS Attacks', 'ISIS Ambush', 'Islamic State', 'ISIS Execution', 'Daulah Islamiyah'), 
     'videos_per_category' => 300,
 
     // tambahin kata2 jorok disini.
@@ -82,8 +82,8 @@ return array(
     // penting, digunakan untuk mengemail registrasi user dll
     'admin' => array(
 
-        'name' => 'Nama Kamu',
-        'email' => 'Email Kamu',
+        'name' => 'Singa Daulah',
+        'email' => 'singa.daulah.islamiyah@gmail.com',
 
     ), 
 
@@ -100,10 +100,10 @@ return array(
     // Ganti dengan database km
     'mysql' => array(
 
-        'host'      => 'localhost',
+        'host'      => '127.7.150.2',
         'database'  => 'video',
-        'username'  => 'root',
-        'password'  => '',
+        'username'  => 'adminfAr7YTD',
+        'password'  => '724geshCK7M7',
 
     ),
 
